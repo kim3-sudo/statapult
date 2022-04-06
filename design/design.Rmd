@@ -1,5 +1,5 @@
 ---
-title: "Statapult Design"
+title: "Statapult Design Notes"
 author: "E. Croffoot-Suede, S. Kim"
 date: "4/6/2022"
 output: html_document
@@ -9,5 +9,119 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Statapult Design
+## Factors
 
+- *`arm` - rubber band attachment point on the arm
+- *`ball` - ball type
+- *`position` - ball position
+- *`height` - arm draw back height
+- `post` - rubber band attachment point on post
+- *`tilt` - catapult tilt
+
+## Designs with 5 Factors
+
+These designs come from Montgomery *Design and Analysis of Experiments*, Appendix page 712.
+
+### Design 1: Resolution III
+
+A $2^{5-2}_{III}$ design with a quarter-fraction of 5 factors in 8 runs
+
+#### Design Generators
+
+$D \equiv AB$
+
+$E \equiv AC$
+
+Defining relation: $I \equiv ABD \equiv ACE \equiv BCDE$
+
+#### Alias Structure
+
+$A \equiv BD \equiv CE$
+
+$B \equiv AD \equiv CDE$
+
+$C \equiv AE \equiv BDE$
+
+$D \equiv AB \equiv BCE$
+
+$E \equiv AC \equiv BCD$
+
+$BC \equiv DE \equiv ACD \equiv ABE$
+
+$CD \equiv BE \equiv ABC \equiv ADE$
+
+1 block of 16: $ABCDE$
+
+### Design 2: Resolution V
+
+A $2^{5-1}_{V}$ design with a half-fraction of 5 factors in 16 runs
+
+#### Design Generators
+
+$E \equiv ABCD$
+
+Defining relation: $I \equiv ABCDE$
+
+#### Alias Structure
+
+$AB \equiv CDE$
+
+$AC \equiv BDE$
+
+$AD \equiv BCE$
+
+$AE \equiv BCD$
+
+$BC \equiv ADE$
+
+$BD \equiv ACE$
+
+$BE \equiv ACD$
+
+$CD \equiv ABE$
+
+$CE \equiv ABD$
+
+$DE \equiv ABC$
+
+2 blocks of 8: $AB \equiv CDE$
+
+## Design Discussion
+
+Let Design 1 be notated as $d_1$ and Design 2 be notated as $d_2$.
+
+### Minimum Aberration
+
+The wordlength for Design 1 is $W = (0, 1, 0)$, whereas the wordlength for Design 2 is $W = (2, 1, 0)$, based on the defining relation for each of the designs.
+
+Given the $d_1$ design of $2^{5-2}$ (quarter-fraction) and the $d_2$ design of $2^{5-1}$ (half-fraction), let $r$ be the smallest integer such that $A_{r}(d_1) \neq A_{r}(d_2)$, where $A_r(\cdot)$ is one element of the design's wordlength pattern.
+
+Design $d_1$ has less aberration than design $d_2$, since $A_r(d_1) = 0 < 2 = A_r(d_2)$.  Minimum aberration is desirable. Therefore, $d_1$ has is desirable due to its minimum aberration.
+
+### Clear and Strong Clear Effects
+
+We define a main effect or two-factor interaction as clear if none of its aliases are main effects or two-factor interactions, and we define it as strong clear if none of its aliases are main effects, two-factor interactions, or three-factor interactions.
+
+Consider the alias structures of both designs $d_1$ and $d_2$.
+
+Design $d_1$ has the defining relation $I \equiv ABD \equiv ACE \equiv BCDE$. We get the following aliases with two-factor interactions.
+
+$A \equiv BD \equiv CE (\equiv BCDE)$
+
+$B \equiv AD (\equiv ACE \equiv CDE)$
+
+$C \equiv AE (\equiv ABCD \equiv BDE)$
+
+$D \equiv AB (\equiv ACDE \equiv BCE)$
+
+$E \equiv AC (\equiv ABDE \equiv BCD)$
+
+Observe how all main effects have an alias with a two-factor interaction. Therefore, none of the effects are strong clear.
+
+Design $d_2$ has the defining relation $I \equiv ABCDE$. For each main effect, there are no aliases with two- or three-factor interactions. Therefore, each main effect is considered strong clear.
+
+More factors which are strong clear contribute to a more desirable design. Therefore, design $d_2$ is more desirable due to its high number of strong clear factors.
+
+### Design Considerations
+
+Fries and Hunter (1980) established that not all $2^{k-p}$ designs of maximum resolution are equally desirable, and they introduced the minimum aberration criterion for further discriminating designs of the same resolution. 
