@@ -4,6 +4,7 @@
 ## Random Orders
 
 import random
+import pandas as pd
 
 random.seed(361)
 
@@ -20,8 +21,14 @@ position = random.sample(ordered, 32)
 height = random.sample(ordered, 32)
 tilt = random.sample(ordered, 32)
 
-print(arm)
-print(ball)
-print(position)
-print(height)
-print(tilt)
+df = pd.DataFrame()
+
+df["arm"] = arm
+df["ball"] = ball
+df["position"] = position
+df["height"] = height
+df["tilt"] = tilt
+
+print(df)
+
+df.to_csv("data/levels.csv")
