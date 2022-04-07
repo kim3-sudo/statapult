@@ -11,16 +11,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Factors
 
-- *`arm` - rubber band attachment point on the arm
-- *`ball` - ball type
-- *`position` - ball position
-- *`height` - arm draw back height
-- `post` - rubber band attachment point on post
-- *`tilt` - catapult tilt
+- *`arm` - rubber band attachment point on the arm: 1, 3
+- *`ball` - ball type: TBD
+- *`position` - ball position: 1, 3
+- *`height` - arm draw back height: 1, 3
+- `post` - rubber band attachment point on post: 1
+- *`tilt` - catapult tilt: 1, 3
 
 ## Designs with 5 Factors
 
-These designs come from Montgomery *Design and Analysis of Experiments*, Appendix page 712.
+These designs come from Montgomery *Design and Analysis of Experiments*, 9ed, Appendix page 712.
 
 ### Design 1: Resolution III
 
@@ -125,3 +125,9 @@ More factors which are strong clear contribute to a more desirable design. There
 ### Design Considerations
 
 Fries and Hunter (1980) established that not all $2^{k-p}$ designs of maximum resolution are equally desirable, and they introduced the minimum aberration criterion for further discriminating designs of the same resolution. 
+
+## Measuring
+
+- Measured in inches
+- Point of first impact
+- Maximize distance
