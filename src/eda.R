@@ -40,4 +40,4 @@ effects = myout$coefficients[2:31]
 halfnorm(effects, labs=names(effects), 
          alpha = 0.10, refline = "TRUE")
 # You may need to zoom this plot in to see all of the effects
-
+#B, AB, CDE, AE, CE, AC, CD, E, D, A, C
