@@ -2,11 +2,20 @@
 title: "Statapult"
 author: "E. Croffoot-Suede, S. Kim"
 date: "4/6/2022"
-output: pdf_document
+output:
+  pdf_document:
+    pandoc_args: --listings
+    includes:
+      in_header: preamble.tex
 ---
 
 ```{r setup, include=FALSE}
+# R code parsing is handled by LaTeX and listings, not by the R Markdown knitter
+# Make sure you include pandoc arguments with listings and that you include preamble.tex in the header of this file.
 knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r datasetup, include=FALSE}
 statapult <- read.csv(url("https://github.com/kim3-sudo/statapult/raw/main/data/data.csv"))
 library(emmeans)
 library(daewr)
@@ -81,11 +90,10 @@ The last factor (`post`) was the rubber band attachment point on the post. It wa
 
 We started by analyzing the full $2^5$ fractional design. To determine significant effects, we used a half-normal plot on the full dataset with no replicates.
 
-```{r fullhnp}
+```{r full_hnp}
 myout = lm(distance ~ A*B*C*D*E, data = statapult)
 effects = myout$coefficients[2:31]
-halfnorm(effects, labs=names(effects), 
-         alpha = 0.10, refline = "TRUE")
+halfnorm(effects, labs=names(effects), alpha = 0.10, refline = "TRUE")
 ```
 
 ## Discussion
