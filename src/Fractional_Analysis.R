@@ -13,7 +13,7 @@ statapult$E = statapult$tilt
 
 head(statapult)
 factional_statapult <- statapult[
-  which(statapult$arm==-1 & statapult$ball== -1 & statapult$position==-1 & statapult$height == -1 & statapult$tilt==1),
+  which(statapult$arm==-1 & statapult$ball== -1 & statapult$position==-1 & statapult$height == -1 & statapult$tilt==1) ,
   which(statapult$arm==1 & statapult$ball== -1 & statapult$position==-1 & statapult$height == -1 & statapult$tilt==-1),
   which(statapult$arm==-1 & statapult$ball==1 & statapult$position==-1 & statapult$height == -1 & statapult$tilt==-1),
   which(statapult$arm==1 & statapult$ball==1 & statapult$position==-1 & statapult$height == -1 & statapult$tilt==1),
@@ -31,4 +31,4 @@ factional_statapult <- statapult[
   which(statapult$arm==1 & statapult$ball==1 & statapult$position==1 & statapult$height == 1 & statapult$tilt==1)]
 
 factional_statapult <- statapult[
-  which(statapult$arm==-1 & statapult$ball== -1 & statapult$position==-1 & statapult$height == -1 & statapult$tilt==1)]
+  (statapult$arm==-1 & statapult$ball== -1 & statapult$position==-1 & statapult$height == -1 & statapult$tilt==1)%in% c("index","run","arm", "ball", "position", "distance")]
