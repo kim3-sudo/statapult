@@ -88,6 +88,8 @@ The last factor (`post`) was the rubber band attachment point on the post. It wa
 
 ## Analysis
 
+### Full Fractional Design
+
 We started by analyzing the full $2^5$ fractional design. To determine significant effects, we used a half-normal plot on the full dataset with no replicates.
 
 ```{r full_hnp}
@@ -173,6 +175,18 @@ interaction.plot(statapult$arm, statapult$ball, statapult$distance)
 
 Since all of the $p$-values for these contrasts are below our $\alpha = 0.05$, we also determined that this combination of ball and arm at the high-level were significantly different from the other combinations.
 
+### Half Fractional Design
+
+We then analyzed the same dataset, but subset it to analyze the data using a $\frac{1}{2}$-fractional design. That is, we used a $2^{5-1}_{\text{V}}$ design to analyze a subset of our data.
+
 ## Discussion
 
+### Full versus Half Fractional Designs
+
+### Randomization
+
+To minimize the effect of rubber band fatigue on the force that the statapult pulled with, we chose to randomize the runs. To do so, we generated a vector of 32 random numbers using the default seed based on system time in Python. After writing each of the factor levels out, we sequentially assigned the each level combination to the next random number in the vector.
+
 ## Conclusion
+
+We believe that the best way to maximize distance from the statapult is to use a wiffle ball at arm position 3 position at position 3, height at position 1, and tilt at position 1. This 
