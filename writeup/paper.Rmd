@@ -88,6 +88,8 @@ The last factor (`post`) was the rubber band attachment point on the post. It wa
 
 ## Analysis
 
+### Full Fractional Design
+
 We started by analyzing the full $2^5$ fractional design. To determine significant effects, we used a half-normal plot on the full dataset with no replicates.
 
 ```{r full_hnp}
@@ -172,6 +174,11 @@ interaction.plot(statapult$arm, statapult$ball, statapult$distance)
 ```
 
 Since all of the $p$-values for these contrasts are below our $\alpha = 0.05$, we also determined that this combination of ball and arm at the high-level were significantly different from the other combinations.
+
+### Half Fractional Design
+
+We then analyzed the same dataset, but subset it to analyze the data using a $\frac{1}{2}$-fractional design. That is, we used a $2^{5-1}_{\text{V}}$ design to analyze a subset of our data.
+
 
 ## Discussion
 
