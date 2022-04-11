@@ -7,6 +7,14 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+statapult <- read.csv(url("https://github.com/kim3-sudo/statapult/raw/main/data/data.csv"))
+library(emmeans)
+library(daewr)
+statapult$A = statapult$arm
+statapult$B = statapult$ball
+statapult$C = statapult$position
+statapult$D = statapult$height
+statapult$E = statapult$tilt
 ```
 
 ## Designs
@@ -71,7 +79,14 @@ The last factor (`post`) was the rubber band attachment point on the post. It wa
 
 ## Analysis
 
-We started by analyzing the full $2^5$ fractional design. 
+We started by analyzing the full $2^5$ fractional design. To determine significant effects, we used a half-normal plot on the full dataset with no replicates.
+
+```{r fullhnp}
+myout = lm(distance ~ A*B*C*D*E, data = statapult)
+effects = myout$coefficients[2:31]
+halfnorm(effects, labs=names(effects), 
+         alpha = 0.10, refline = "TRUE")
+```
 
 ## Discussion
 
