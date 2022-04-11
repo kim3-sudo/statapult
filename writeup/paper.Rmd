@@ -57,7 +57,21 @@ Therefore, design $d_2$ is more desirable due to its high number of strong clear
 
 Fries and Hunter (1980) established that not all $2^{k-p}$ designs of maximum resolution are equally desirable, and they introduced the minimum aberration criterion for further discriminating designs of the same resolution.
 
+## Data
+
+We began by collecting our data. The data were collected on April 7, 2022 using a "statapult." Out of six possible factors, we chose to analyze five of them, leaving the last factor (POST) at the low level for all runs. The factors are as follows.
+
+- `arm` - rubber band attachment point on the arm: 1, 3
+- `ball` - ball type: ping-pong ball (low), wiffle ball (high)
+- `position` - ball position: 1, 3
+- `height` - arm draw back height: 1, 3
+- `tilt` - catapult tilt: 1, 3
+
+The last factor (`post`) was the rubber band attachment point on the post. It was left at the high level (1) for all runs.
+
 ## Analysis
+
+We started by analyzing the full $2^5$ fractional design. 
 
 ## Discussion
 
