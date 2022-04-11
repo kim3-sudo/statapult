@@ -16,6 +16,8 @@ stata.red.model = lm(distance ~ 1, data = statapult)
 anova(stata.red.model, stata.full.model)
 anova(stata.full.model)
 # The full model is significantly different
+# ANOVA 3 way (C:D:E)
+anova(stata.full.model)
 # ANOVA 2 way (A:B)
 anova(stata.full.model)
 # Also significantly idfferent
