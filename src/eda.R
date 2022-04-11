@@ -41,3 +41,33 @@ halfnorm(effects, labs=names(effects),
          alpha = 0.10, refline = "TRUE")
 # You may need to zoom this plot in to see all of the effects
 #B, AB, CDE, AE, CE, AC, CD, E, D, A, C
+
+stata.full.model=lm(distance~C*D*E+A*B+A*E+A*C+C*E, data=statapult)
+stata.red.model=lm(distance~1, data=statapult)
+
+#red vs. full
+anova(stata.red.model, stata.full.model)
+
+#anova 3 way #significant
+anova(stata.full.model)
+
+#anova 2 way (A:B) #signifcant
+anova(stata.full.model)
+
+#contrasts/pairwise comparisons on 3 way interaction cells
+library(emmeans)
+lsm_CDE.int <- lsmeans(stata.full.model , ~C:D:E)
+summary(contrast(lsm_CDE.int, method="pairwise", adjust="Bonferroni"), 
+        infer=c(T,T), level=.95, side="two.sided")
+
+#position (C) high, tilt (E) low, height (D) low (last three interaction plot)
+#to maximize distance we want 1, -1, -1, which is significantly different 
+#from everything else
+
+#contrasts/pairwise comparisons on 2 way interaction cells (A:B)
+lsm_AB.int <- lsmeans(stata.full.model , ~A:B)
+summary(contrast(lsm_AB.int, method="pairwise", adjust="Bonferroni"), 
+        infer=c(T,T), level=.95, side="two.sided")
+#AB at high level max distance (interaction plot 1) and significantly different
+#from everything else
+
