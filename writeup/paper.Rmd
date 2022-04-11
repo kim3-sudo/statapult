@@ -2,11 +2,20 @@
 title: "Statapult"
 author: "E. Croffoot-Suede, S. Kim"
 date: "4/6/2022"
-output: pdf_document
+output:
+  pdf_document:
+    pandoc_args: --listings
+    includes:
+      in_header: preamble.tex
 ---
 
 ```{r setup, include=FALSE}
+# R code parsing is handled by LaTeX and listings, not by the R Markdown knitter
+# Make sure you include pandoc arguments with listings and that you include preamble.tex in the header of this file.
 knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r datasetup, include=FALSE}
 statapult <- read.csv(url("https://github.com/kim3-sudo/statapult/raw/main/data/data.csv"))
 library(emmeans)
 library(daewr)
@@ -79,15 +88,105 @@ The last factor (`post`) was the rubber band attachment point on the post. It wa
 
 ## Analysis
 
+### Full Fractional Design
+
 We started by analyzing the full $2^5$ fractional design. To determine significant effects, we used a half-normal plot on the full dataset with no replicates.
 
-```{r fullhnp}
+```{r full_hnp}
 myout = lm(distance ~ A*B*C*D*E, data = statapult)
 effects = myout$coefficients[2:31]
-halfnorm(effects, labs=names(effects), 
-         alpha = 0.10, refline = "TRUE")
+halfnorm(effects, labs=names(effects), alpha = 0.10, refline = "TRUE")
 ```
+
+Based on the half-normal plot, we determined that all main effects $A$, $B$, $C$, $D$, and $E$ ought to be put into the model, along with the two-way interactions $AB$, $AC$, $AE$, $CD$, and $CE$, and the three-way interaction $CDE$. The three-way interaction term includes the main effects $C$, $D$, and $E$, and the two-way interactions $AC$, $AE$, $CD$, and $CE$. The two-way interaction term $AB$ includes the main effects $A$, and $B$.
+
+The resulting full model with all terms is
+
+$$
+Y_{\text{Distance}} = C*D*E + A*B + A*E + A*C + C*E
+$$
+
+To analyze the data, we start by testing for overall significance using a F-test for the model. To do so, we fit two linear models: one with the response (`distance`) by the full model and one with the response by 1 to make our null model.
+
+```{r full_lms}
+stata.full.model = lm(distance ~ C*D*E + A*B + A*E + A*C + C*E, data = statapult)
+stata.red.model = lm(distance ~ 1, data = statapult)
+```
+
+Then, we tested the full model against the null model using analysis of variance.
+
+```{r full_anova}
+anova(stata.red.model, stata.full.model)
+```
+
+We found that the full model is significantly different with a $p$-value of at least $2.2\times 10^{-16}$.
+
+Based on this, we ran a F-test for three-way interactions.
+
+```{r full_threeway}
+anova(stata.full.model)
+```
+
+We found that the three-way interaction $C * D * E$ was significantly different with a $F$-value of 11.2797 on one degree of freedom and a $p$-value of $p = 0.003300 < 0.05 = \alpha$.
+
+We found that the two-way interaction $A*B$ was significantly different with a $F$-value of 9.8259 on one degree of freedom and a $p$-value of $p = 0.005457 < 0.05 = \alpha$.
+
+Based on this, we generated contrasts on the three-way interaction cells.
+
+```{r full_threeway_contrasts}
+lsm_CDE.int <- lsmeans(stata.full.model , ~ C:D:E)
+summary(contrast(lsm_CDE.int,
+                 method = "pairwise",
+                 adjust = "Bonferroni"), 
+        infer = c(T,T),
+        level = .95,
+        side = "two.sided")
+```
+
+We chose to use Bonferroni's correction method on the contrasts because of its higher power on smaller numbers of means, especially compared to Tukey's correction method.
+
+Based on this, we found that to maximize distance, we ought to keep position (C) high, tilt (E) low, and height (D) low, based on the interaction plots between position, tilt, and height.
+
+```{r full_threeway_interaction}
+interaction.plot(statapult$position, statapult$height, statapult$distance)
+interaction.plot(statapult$position, statapult$tilt, statapult$distance)
+interaction.plot(statapult$height, statapult$tilt, statapult$distance)
+```
+
+Since all of the $p$-values for these contrasts are below our $\alpha = 0.05$, we also determined that this combination of position at the high-level, and tilt and height at the low-level were significantly different from the other combinations.
+
+We also generated contrasts for the two-way $A*B$ cell. Similarly, we chose to use Bonferroni's correction method on the contrasts over Tukey's correction method. 
+
+```{r full_twoway_contrasts}
+lsm_AB.int <- lsmeans(stata.full.model , ~ A:B)
+summary(contrast(lsm_AB.int,
+                 method = "pairwise",
+                 adjust = "Bonferroni"), 
+        infer = c(T,T),
+        level = .95,
+        side = "two.sided")
+```
+
+Based on this, we found that to maximize distance, we ought to keep ball and arm at the high level to achieve the highest distance based on the interaction plot.
+
+```{r full_twoway_interaction}
+interaction.plot(statapult$arm, statapult$ball, statapult$distance)
+```
+
+Since all of the $p$-values for these contrasts are below our $\alpha = 0.05$, we also determined that this combination of ball and arm at the high-level were significantly different from the other combinations.
+
+### Half Fractional Design
+
+We then analyzed the same dataset, but subset it to analyze the data using a $\frac{1}{2}$-fractional design. That is, we used a $2^{5-1}_{\text{V}}$ design to analyze a subset of our data.
 
 ## Discussion
 
+### Full versus Half Fractional Designs
+
+### Randomization
+
+To minimize the effect of rubber band fatigue on the force that the statapult pulled with, we chose to randomize the runs. To do so, we generated a vector of 32 random numbers using the default seed based on system time in Python. After writing each of the factor levels out, we sequentially assigned the each level combination to the next random number in the vector.
+
 ## Conclusion
+
+We believe that the best way to maximize distance from the statapult is to use a wiffle ball at arm position 3 position at position 3, height at position 1, and tilt at position 1. This 

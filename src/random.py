@@ -6,20 +6,41 @@
 import random
 import pandas as pd
 
-random.seed(361)
+#random.seed(361)
 
-ordered = []
-for i in range(16):
-  ordered.append(-1)
-  ordered.append(1)
+runs = []
+for i in range(32):
+  runs.append(i)
   
-print(ordered) # [-1, 1, -1, 1...1]
+runs = random.sample(runs, k = 32)
 
-arm = random.sample(ordered, 32)
-ball = random.sample(ordered, 32)
-position = random.sample(ordered, 32)
-height = random.sample(ordered, 32)
-tilt = random.sample(ordered, 32)
+arm = []
+ball = []
+position = []
+height = []
+tilt = []
+for i in range(16):
+  arm.append(-1)
+  arm.append(1)
+for i in range(8):
+  for j in range(2):
+    ball.append(-1)
+  for j in range(2):
+    ball.append(1)
+for i in range(4):
+  for j in range(4):
+    position.append(-1)
+  for j in range(4):
+    position.append(1)
+for i in range(2):
+  for j in range(8):
+    height.append(-1)
+  for j in range(8):
+    height.append(1)
+for i in range(16):
+  tilt.append(-1)
+for i in range(16):
+  tilt.append(1)
 
 df = pd.DataFrame()
 
@@ -28,6 +49,7 @@ df["ball"] = ball
 df["position"] = position
 df["height"] = height
 df["tilt"] = tilt
+df["distance"] = None
 
 print(df)
 
