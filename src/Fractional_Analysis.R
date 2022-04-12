@@ -1,4 +1,3 @@
-library(mosaic)
 ## Fractional_Analysis.R - Statapult
 ## E. Croffoot-Suede, S. Kim
 ## 11 Apr 2022 - STAT 306 DoE
@@ -6,6 +5,8 @@ library(mosaic)
 
 statapult <- read.csv(url("https://github.com/kim3-sudo/statapult/raw/main/data/data.csv"))
 
+#load libraries
+library(mosaic)
 #figure out indexes of fractional runs----
 statapult[(statapult$arm==-1) & (statapult$ball== -1) & (statapult$position==-1) & 
             (statapult$height == -1) & (statapult$tilt==1),]
