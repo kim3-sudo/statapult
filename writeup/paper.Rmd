@@ -30,11 +30,11 @@ statapult$E = statapult$tilt
 
 We began by collecting our data. The data were collected on April 7, 2022 using a "statapult." Out of six possible factors, we chose to analyze five of them, leaving the last factor (POST) at the low level for all runs. The factors are as follows.
 
-- `arm` - rubber band attachment point on the arm: 1, 3
-- `ball` - ball type: ping-pong ball (low), wiffle ball (high)
-- `position` - ball position: 1, 3
-- `height` - arm draw back height: 1, 3
-- `tilt` - catapult tilt: 1, 3
+- `arm` - rubber band attachment point on the arm: 1, 3, encoded as $A$
+- `ball` - ball type: ping-pong ball (low), wiffle ball (high), encoded as $B$
+- `position` - ball position: 1, 3, encoded as $C$
+- `height` - arm draw back height: 1, 3, encoded as $D$
+- `tilt` - catapult tilt: 1, 3, encoded as $E$
 
 The last factor (`post`) was the rubber band attachment point on the post. It was left at the high level (1) for all runs.
 
