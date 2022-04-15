@@ -40,7 +40,7 @@ The last factor (`post`) was the rubber band attachment point on the post. It wa
 
 ## Analysis
 
-### Full Fractional Design
+### Full-Fractional Design
 
 We started by analyzing the full $2^5$ fractional design. To determine significant effects, we used a half-normal plot on the full dataset with no replicates.
 
@@ -109,7 +109,7 @@ summary(contrast(lsm_AB.int,
 
 Since all of the $p$-values for these contrasts are below our $\alpha = 0.05$, we also determined that this combination of ball and arm at the high-level were significantly different from the other combinations.
 
-### Half Fractional Design
+### Half-Fractional Design
 
 We then analyzed the same dataset, but subset it to analyze the data using a $\frac{1}{2}$-fractional design. That is, we used a $2^{5-1}_{\text{V}}$ design to analyze a subset of our data.
 
@@ -194,7 +194,7 @@ Based on the contrasts and the interaction plots, we determined that to maximize
 
 ## Discussion
 
-### Full versus Half Fractional Designs
+### Full versus Half-Fractional Designs
 
 The interactions the full design had a three-way interaction term ($C*D*E$) as well as a single two-way interaction term ($A*B$). Conversely, the half-fractional design had no three-way interaction terms, but it had five two-way interaction terms ($A*B$, $A*C$, $A*E$, $C*E$, and $C*D$).
 
@@ -206,6 +206,6 @@ To minimize the effect of rubber band fatigue on the force that the statapult pu
 
 ## Conclusion
 
-We believe that the best way to maximize distance from the statapult is to use a wiffle ball at arm position 3 position at position 3, height at position 1, and tilt at position 1. This conclusion was drawn from the full fractional design.
+We believe that the best way to maximize distance from the statapult is to use a wiffle ball at arm position 3 position at position 3, height at position 1, and tilt at position 1. This conclusion was drawn from the full-fractional design.
 
 Between the half-fractional and full-fractional designs, there were no differences in the results aside from the tilt position. Therefore, if time or money were restricted and the amount of runs had to be limited, we believe that using limited runs in a half-fractional design would still yield good results.
