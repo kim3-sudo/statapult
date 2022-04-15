@@ -55,7 +55,7 @@ Based on the half-normal plot, we determined that all main effects $A$, $B$, $C$
 The resulting full model with all terms is
 
 $$
-Y_{\text{Distance}} = C*D*E + A*B + A*E + A*C + C*E
+Y_{\text{Distance}} = A+B+C+D+E+C*D*E + A*B + A*E + A*C + C*E + C*D + D*E
 $$
 
 To analyze the data, we start by testing for overall significance using a $F$-test for the model. To do so, we fit two linear models: one with the response (`distance`) by the full model and one with the response by 1 to make our reduced model. Then, we tested the full model against the reduced model using analysis of variance.
@@ -66,7 +66,7 @@ stata.red.model = lm(distance ~ 1, data = statapult)
 anova(stata.red.model, stata.full.model)
 ```
 
-We found that the full model is significantly different with a $p$-value of at most $2.2\times 10^{-16}$ and a $F$-value of 185.94 on (12, 19).
+We found that the full model is significantly different with a $p$-value of at most $2.2\times 10^{-16}$ and a $F$-value of 185.94 on (12, 19) degrees of freedom.
 
 Based on this, we ran a F-test for three-way interactions. We found that the three-way interaction $C * D * E$ was significantly different with a $F$-value of 11.2797 on (1, 19) degree of freedom and a $p$-value of $p = 0.003300 < 0.05 = \alpha$.
 
@@ -84,7 +84,7 @@ summary(contrast(lsm_CDE.int,
 
 Based on this, we generated contrasts on the three-way interaction cells. We chose to use Bonferroni's correction method on the contrasts because of its higher power on smaller numbers of means, especially compared to Tukey's correction method.
 
-Based on this, we found that to maximize distance, we ought to keep position (C) high, tilt (E) low, and height (D) low, based on the interaction plots between position, tilt, and height.
+Based on this, we found that to maximize distance, we ought to keep position (C) high, height (D) low, and tilt (E) low, based on the interaction plots between position, tilt, and height.
 
 ```{r full_threeway_interaction, fig.show="hold", out.width="50%", fig.height = 5, echo = FALSE}
 interaction.plot(statapult$position, statapult$height, statapult$distance, ylab = "Mean of Distance", xlab = "Position", trace.label = "Height")
@@ -113,7 +113,7 @@ Since all of the $p$-values for these contrasts are below our $\alpha = 0.05$, w
 
 We then analyzed the same dataset, but subset it to analyze the data using a $\frac{1}{2}$-fractional design. That is, we used a $2^{5-1}_{\text{V}}$ design to analyze a subset of our data.
 
-To subset the data, we found the sixteen runs in the half-fractional design and identified them by what factor they were. We then got the index number of that observation to pull those observations into a new dataset.
+To subset the data, we found the sixteen runs in the half-fractional design and identified them by what level each factor was at. We then got the index number of that observation to pull those observations into a new dataset.
 
 ```{r half_subset, include = FALSE}
 statapult[(statapult$arm==-1) & (statapult$ball== -1) & (statapult$position==-1) &
@@ -176,7 +176,7 @@ Based on the half-normal plot, we determined that all main effects $A$, $B$, $C$
 The resulting full model with all terms is
 
 $$
-Y_{\text{Distance}} = A*B + A*C + A*E + C*D + C*E 
+Y_{\text{Distance}} = A+B+C+D+E+A*B + A*C + A*E + C*D + C*E 
 $$
 
 To analyze the data, we start by testing for overall significance using a $F$-test for the model. To do so, we fit two linear models, one with the response (`distance`) by the full model and one with the response by 1 to make our reduced model. We then tested the full model against the null model using analysis of variance.
@@ -190,13 +190,15 @@ We found that the full model is significantly different with a $p$-value of $4.5
 
 Based on this, we generated contrasts on the two-way interaction cells. Again, we chose to use Bonferroni's correction method on the contrasts because of its higher power on smaller numbers of means, especially compared to Tukey's correction method.
 
-Based on the contrasts and the interaction plots, we determined that to maximize distance, we ought to keep arm (A) high, ball (B) high, position (C) high, and height (D) low. There is no significant difference between having the tilt at the high or low level.
+Based on the contrasts and the interaction plots, we determined that to maximize distance, we ought to keep arm (A) high, ball (B) high, position (C) high, and height (D) low. There is no significant difference between having the tilt (E) at the high or low level.
 
 ## Discussion
 
 ### Full versus Half Fractional Designs
 
+The interactions the full design had a three-way interaction term ($C*D*E$) as well as a single two-way interaction term ($A*B$). Conversely, the half-fractional design had no three-way interaction terms, but it had five two-way interaction terms ($A*B$, $A*C$, $A*E$, $C*E$, and $C*D$).
 
+In the full design, we determined that the best combination was to put position at point 3 (high), tilt at point 1 (low), height at point 1 (low), arm at point 3 (high) with a wiffle ball. In the half-fractional design, we found the same combination with the exception of tilt, where there was no difference between point 1 (low) and point 3 (high). We found it interesting that although the interaction terms were different between the two models, that the conclusion of each test was the same.
 
 ### Randomization
 
@@ -204,4 +206,6 @@ To minimize the effect of rubber band fatigue on the force that the statapult pu
 
 ## Conclusion
 
-We believe that the best way to maximize distance from the statapult is to use a wiffle ball at arm position 3 position at position 3, height at position 1, and tilt at position 1. This 
+We believe that the best way to maximize distance from the statapult is to use a wiffle ball at arm position 3 position at position 3, height at position 1, and tilt at position 1. This conclusion was drawn from the full fractional design.
+
+Between the half-fractional and full-fractional designs, there were no differences in the results aside from the tilt position. Therefore, if time or money were restricted and the amount of runs had to be limited, we believe that using limited runs in a half-fractional design would still yield good results.
