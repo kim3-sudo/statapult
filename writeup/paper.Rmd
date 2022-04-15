@@ -26,54 +26,6 @@ statapult$D = statapult$height
 statapult$E = statapult$tilt
 ```
 
-## Designs
-
-There were two possible designs for the data of this form: a $2^{5-1}_{V}$ design, and a $2^{5-2}_{III}$ design.
-
-### The Resolution III Design
-
-The $2^{5-2}_{\text{III}}$ design is a quarter-fraction design which uses five factors over 8 runs. This design uses the constraints $D \equiv AB$ and $E \equiv AC$. Its defining relation is $I \equiv ABD \equiv ACE \equiv BCDE$. We will refer to this resolution III design as design 1, notated as $d_1$.
-
-### The Resolution V Design
-
-The $2^{5-1}_{\text{V}}$ design is a half-fraction design which uses five factors over 16 runs. This design uses the constraint $E \equiv ABCD$. Its defining relation is $I \equiv ABCDE$. We will refer to this resolution V design as design 2, notated as $d_2$.
-
-### Minimum Aberration Model Robustness
-
-Minimum aberration is a model robustness metric used to select a design shape for a dataset. It uses the wordlength vectors from two or more designs to determine the model with the minimum aberration. Less aberration is desirable.
-
-The wordlength for Design 1 is $W = (0, 1, 0)$, whereas the wordlength for Design 2 is $W = (2, 1, 0)$, based on the defining relation for each of the designs.
-
-Given the $d_1$ design of $2^{5-2}$ (quarter-fraction) and the $d_2$ design of $2^{5-1}$ (half-fraction), let $r$ be the smallest integer such that $A_{r}(d_1) \neq A_{r}(d_2)$, where $A_r(\cdot)$ is one element of the design's wordlength pattern.
-
-Design $d_1$ has less aberration than design $d_2$, since $A_r(d_1) = 0 < 2 = A_r(d_2)$. Therefore, $d_1$ is desired over $d_2$ due to its lower aberration.
-
-### Clear and Strong Clear Effects for Model Robustness
-
-Determining model clear and strong clear factors can also be used to determine model robustness. It uses the number of clear effects and strong clear effects from two or more designs to determine the model with the most strong clear, then the most clear effects. More strong clear effects are desirable. If all models have the same number of strong clear effects or no models have any strong clear effects, then more clear effects are desirable.
-
-We define a main effect or two-factor interaction as clear if none of its aliases are main effects or two-factor interactions, and we define it as strong clear if none of its aliases are main effects, two-factor interactions, or three-factor interactions.
-
-To determine strong clear and clear effects, we consider the alias structure. Design $d_1$ has the defining relation $I \equiv ABD \equiv ACE \equiv BCDE$. We get the following aliases with two-factor interactions.
-
-$A \equiv BD \equiv CE (\equiv BCDE)$
-
-$B \equiv AD (\equiv ACE \equiv CDE)$
-
-$C \equiv AE (\equiv ABCD \equiv BDE)$
-
-$D \equiv AB (\equiv ACDE \equiv BCE)$
-
-$E \equiv AC (\equiv ABDE \equiv BCD)$
-
-Observe how all main effects have an alias with a two-factor interaction. Therefore, none of the effects are strong clear.
-
-Design $d_2$ has the defining relation $I \equiv ABCDE$. For each main effect, there are no aliases with two- or three-factor interactions. Therefore, each main effect is considered strong clear.
-
-Therefore, design $d_2$ is more desirable due to its high number of strong clear factors.
-
-Fries and Hunter (1980) established that not all $2^{k-p}$ designs of maximum resolution are equally desirable, and they introduced the minimum aberration criterion for further discriminating designs of the same resolution.
-
 ## Data
 
 We began by collecting our data. The data were collected on April 7, 2022 using a "statapult." Out of six possible factors, we chose to analyze five of them, leaving the last factor (POST) at the low level for all runs. The factors are as follows.
@@ -92,7 +44,7 @@ The last factor (`post`) was the rubber band attachment point on the post. It wa
 
 We started by analyzing the full $2^5$ fractional design. To determine significant effects, we used a half-normal plot on the full dataset with no replicates.
 
-```{r full_hnp}
+```{r full_hnp, echo = FALSE}
 myout = lm(distance ~ A*B*C*D*E, data = statapult)
 effects = myout$coefficients[2:31]
 halfnorm(effects, labs=names(effects), alpha = 0.10, refline = "TRUE")
@@ -106,34 +58,21 @@ $$
 Y_{\text{Distance}} = C*D*E + A*B + A*E + A*C + C*E
 $$
 
-To analyze the data, we start by testing for overall significance using a F-test for the model. To do so, we fit two linear models: one with the response (`distance`) by the full model and one with the response by 1 to make our null model.
+To analyze the data, we start by testing for overall significance using a $F$-test for the model. To do so, we fit two linear models: one with the response (`distance`) by the full model and one with the response by 1 to make our reduced model. Then, we tested the full model against the reduced model using analysis of variance.
 
-```{r full_lms}
+```{r full_lms, include = FALSE}
 stata.full.model = lm(distance ~ C*D*E + A*B + A*E + A*C + C*E, data = statapult)
 stata.red.model = lm(distance ~ 1, data = statapult)
-```
-
-Then, we tested the full model against the null model using analysis of variance.
-
-```{r full_anova}
 anova(stata.red.model, stata.full.model)
 ```
 
-We found that the full model is significantly different with a $p$-value of at least $2.2\times 10^{-16}$.
+We found that the full model is significantly different with a $p$-value of at most $2.2\times 10^{-16}$ and a $F$-value of 185.94 on (12, 19).
 
-Based on this, we ran a F-test for three-way interactions.
+Based on this, we ran a F-test for three-way interactions. We found that the three-way interaction $C * D * E$ was significantly different with a $F$-value of 11.2797 on (1, 19) degree of freedom and a $p$-value of $p = 0.003300 < 0.05 = \alpha$.
 
-```{r full_threeway}
-anova(stata.full.model)
-```
+We found that the two-way interaction $A*B$ was significantly different with a $F$-value of 9.8259 on (1, 19) degree of freedom and a $p$-value of $p = 0.005457 < 0.05 = \alpha$.
 
-We found that the three-way interaction $C * D * E$ was significantly different with a $F$-value of 11.2797 on one degree of freedom and a $p$-value of $p = 0.003300 < 0.05 = \alpha$.
-
-We found that the two-way interaction $A*B$ was significantly different with a $F$-value of 9.8259 on one degree of freedom and a $p$-value of $p = 0.005457 < 0.05 = \alpha$.
-
-Based on this, we generated contrasts on the three-way interaction cells.
-
-```{r full_threeway_contrasts}
+```{r full_threeway_contrasts, include = FALSE}
 lsm_CDE.int <- lsmeans(stata.full.model , ~ C:D:E)
 summary(contrast(lsm_CDE.int,
                  method = "pairwise",
@@ -143,21 +82,22 @@ summary(contrast(lsm_CDE.int,
         side = "two.sided")
 ```
 
-We chose to use Bonferroni's correction method on the contrasts because of its higher power on smaller numbers of means, especially compared to Tukey's correction method.
+Based on this, we generated contrasts on the three-way interaction cells. We chose to use Bonferroni's correction method on the contrasts because of its higher power on smaller numbers of means, especially compared to Tukey's correction method.
 
 Based on this, we found that to maximize distance, we ought to keep position (C) high, tilt (E) low, and height (D) low, based on the interaction plots between position, tilt, and height.
 
-```{r full_threeway_interaction}
-interaction.plot(statapult$position, statapult$height, statapult$distance)
-interaction.plot(statapult$position, statapult$tilt, statapult$distance)
-interaction.plot(statapult$height, statapult$tilt, statapult$distance)
+```{r full_threeway_interaction, fig.show="hold", out.width="50%", fig.height = 5, echo = FALSE}
+interaction.plot(statapult$position, statapult$height, statapult$distance, ylab = "Mean of Distance", xlab = "Position", trace.label = "Height")
+interaction.plot(statapult$position, statapult$tilt, statapult$distance, ylab = "Mean of Distance", xlab = "Position", trace.label = "Tilt")
+interaction.plot(statapult$height, statapult$tilt, statapult$distance, ylab = "Mean of Distance", xlab = "tilt", trace.label = "distance")
+interaction.plot(statapult$arm, statapult$ball, statapult$distance, ylab = "Mean of Distance", xlab = "Arm", trace.label = "Ball")
 ```
 
 Since all of the $p$-values for these contrasts are below our $\alpha = 0.05$, we also determined that this combination of position at the high-level, and tilt and height at the low-level were significantly different from the other combinations.
 
-We also generated contrasts for the two-way $A*B$ cell. Similarly, we chose to use Bonferroni's correction method on the contrasts over Tukey's correction method. 
+We also generated contrasts for the two-way $A*B$ cell. Similarly, we chose to use Bonferroni's correction method on the contrasts over Tukey's correction method. Based on this, we found that to maximize distance, we ought to keep ball and arm at the high level to achieve the highest distance based on the interaction plot.
 
-```{r full_twoway_contrasts}
+```{r full_twoway_contrasts, include = FALSE}
 lsm_AB.int <- lsmeans(stata.full.model , ~ A:B)
 summary(contrast(lsm_AB.int,
                  method = "pairwise",
@@ -167,21 +107,96 @@ summary(contrast(lsm_AB.int,
         side = "two.sided")
 ```
 
-Based on this, we found that to maximize distance, we ought to keep ball and arm at the high level to achieve the highest distance based on the interaction plot.
-
-```{r full_twoway_interaction}
-interaction.plot(statapult$arm, statapult$ball, statapult$distance)
-```
-
 Since all of the $p$-values for these contrasts are below our $\alpha = 0.05$, we also determined that this combination of ball and arm at the high-level were significantly different from the other combinations.
 
 ### Half Fractional Design
 
 We then analyzed the same dataset, but subset it to analyze the data using a $\frac{1}{2}$-fractional design. That is, we used a $2^{5-1}_{\text{V}}$ design to analyze a subset of our data.
 
+To subset the data, we found the sixteen runs in the half-fractional design and identified them by what factor they were. We then got the index number of that observation to pull those observations into a new dataset.
+
+```{r half_subset, include = FALSE}
+statapult[(statapult$arm==-1) & (statapult$ball== -1) & (statapult$position==-1) &
+            (statapult$height == -1) & (statapult$tilt==1),]
+statapult[(statapult$arm==1) & (statapult$ball== -1) & (statapult$position==-1) &
+            (statapult$height == -1) & (statapult$tilt==-1),]
+statapult[(statapult$arm==-1) & (statapult$ball==1) & (statapult$position==-1) &
+            (statapult$height == -1) & (statapult$tilt==-1),]
+statapult[(statapult$arm==1) & (statapult$ball==1) & (statapult$position==-1) &
+            (statapult$height == -1) & (statapult$tilt==1),]
+statapult[(statapult$arm==-1) & (statapult$ball== -1) & (statapult$position==1) &
+            (statapult$height == -1) & (statapult$tilt==-1),]
+statapult[(statapult$arm==1) & (statapult$ball== -1) & (statapult$position==1) &
+            (statapult$height == -1) & (statapult$tilt==1),]
+statapult[(statapult$arm==-1) & (statapult$ball==1) & (statapult$position==1) &
+            (statapult$height == -1) & (statapult$tilt==1),]
+statapult[(statapult$arm==1) & (statapult$ball== 1) & (statapult$position==1) &
+            (statapult$height == -1) & (statapult$tilt==-1),]
+statapult[(statapult$arm==-1) & (statapult$ball== -1) & (statapult$position==-1) &
+            (statapult$height ==1) & (statapult$tilt==-1),]
+statapult[(statapult$arm==1) & (statapult$ball== -1) & (statapult$position==-1) &
+            (statapult$height == 1) & (statapult$tilt==1),]
+statapult[(statapult$arm==-1) & (statapult$ball== 1) & (statapult$position==-1) &
+            (statapult$height == 1) & (statapult$tilt==1),]
+statapult[(statapult$arm==1) & (statapult$ball== 1) & (statapult$position==-1) &
+            (statapult$height == 1) & (statapult$tilt==-1),]
+statapult[(statapult$arm==-1) & (statapult$ball== -1) & (statapult$position==1) &
+            (statapult$height == 1) & (statapult$tilt==1),]
+statapult[(statapult$arm==1) & (statapult$ball== -1) & (statapult$position==1) &
+            (statapult$height == 1) & (statapult$tilt==-1),]
+statapult[(statapult$arm==-1) & (statapult$ball== 1) & (statapult$position==1) &
+            (statapult$height == 1) & (statapult$tilt==-1),]
+statapult[(statapult$arm==1) & (statapult$ball==1) & (statapult$position==1) &
+            (statapult$height == 1) & (statapult$tilt==1),]
+
+# Create df of just 16 fractional runs ----
+fractional_statapult <- subset(statapult, index==17|index==2|index==3|index==20|index==5|
+                                 index==22|index==23|index==8|index==9|index==26|index==27|
+                                 index==12|index==29|index==14|index==15|index==32,
+                  select=index:distance)
+
+# Re-encode variables to factor naming ----
+fractional_statapult$A = fractional_statapult$arm
+fractional_statapult$B = fractional_statapult$ball
+fractional_statapult$C = fractional_statapult$position
+fractional_statapult$D = fractional_statapult$height
+fractional_statapult$E = fractional_statapult$tilt
+```
+
+We then used a half-normal plot on the fractional dataset with no replicates.
+
+```{r half_hnp, echo = FALSE}
+myout = lm(distance ~ A*B*C*D*E, data = fractional_statapult)
+effects = myout$coefficients[2:15]
+halfnorm(effects, labs = names(effects), alpha = 0.70, refline = "TRUE")
+```
+
+Based on the half-normal plot, we determined that all main effects $A$, $B$, $C$, $D$, and $E$, ought to be put into the model, along with the two-way interactions $AB$, $AC$, $AE$, $CD$, and $CE$. The two-way interaction terms include all of the main effects.
+
+The resulting full model with all terms is
+
+$$
+Y_{\text{Distance}} = A*B + A*C + A*E + C*D + C*E 
+$$
+
+To analyze the data, we start by testing for overall significance using a $F$-test for the model. To do so, we fit two linear models, one with the response (`distance`) by the full model and one with the response by 1 to make our reduced model. We then tested the full model against the null model using analysis of variance.
+
+```{r half_anova, include = FALSE}
+statb.full.model = lm(distance ~ A*B + A*C + A*E + C*E + C*D, data = fractional_statapult)
+statb.red.model = lm(distance ~ 1, data = fractional_statapult)
+```
+
+We found that the full model is significantly different with a $p$-value of $4.549 \times 10 ^{-6}$. We then found that the two-way interaction $A * B$ was significantly different with a $F$-value of 45.215 on (1, 5) degrees of freedom and a $p$-value of $p = 0.0011024 < 0.05 = \alpha$. The two-way interaction $A*C$ was significantly different with a $F$-value of 23.710 on (1, 5) degrees of freedom and a $p$-value of $p = 0.0045958 < 0.05 = \alpha$. The two-way interaction $A*E$ was significantly different with a $F$-value of 33.602 on (1, 5) degrees of freedom and a $p$-value of $p = 0.0021528 < 0.05 = \alpha$. The two-way interaction $C*E$ was significantly different with a $F$-value of 33.602 on (1, 5) degrees of freedom and a $p$-value of $p = 0.0021528 < 0.05 = \alpha$. The two-way interaction $C*D$ was significantly different with a $F$-value of 45.215 on (1, 5) degrees of freedom and a $p$-value of $p = 0.0011024 < 0.05 = \alpha$.
+
+Based on this, we generated contrasts on the two-way interaction cells. Again, we chose to use Bonferroni's correction method on the contrasts because of its higher power on smaller numbers of means, especially compared to Tukey's correction method.
+
+Based on the contrasts and the interaction plots, we determined that to maximize distance, we ought to keep arm (A) high, ball (B) high, position (C) high, and height (D) low. There is no significant difference between having the tilt at the high or low level.
+
 ## Discussion
 
 ### Full versus Half Fractional Designs
+
+
 
 ### Randomization
 
